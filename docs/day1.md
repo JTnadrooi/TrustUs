@@ -58,3 +58,7 @@ De client handled login en bestandsacties (upload/download) en communiceert met 
 De server valideert elke request, voert authenticatie en autorisatie uit, en verwerkt bestanden via PHP. Tijdens uploads worden bestanden eerst gecontroleerd of ze valid zijn, daarna krijgt elk bestand een SHA-256 hash voor integriteitscontrole en wordt het versleuteld opgeslagen met AES-256-GCM. Downloads worden alleen toegestaan na rechtencontrole en hash-verificatie.
 
 De database slaat gebruikers, bestands(meta)data en logs op. Logs registreren onder andere uploads, downloads, verwijderingen en mislukte toegangspogingen.
+
+### Diagram
+
+![](day1.png)
