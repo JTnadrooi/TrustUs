@@ -15,7 +15,7 @@ if (!$file) {
 $relativePath = $file['file_path'];
 $absolutePath = PROJECT_ROOT . '/' . $relativePath;
 
-// Check if file actually exists
+// check if file actually exists
 if (!file_exists($absolutePath)) {
     http_response_code(404);
     die('File not found on server.');

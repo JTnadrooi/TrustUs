@@ -1,9 +1,9 @@
 <?php
 require_once 'functions.php';
 
-// Create upload directory if missing
+// create upload directory if missing
 if (!file_exists(UPLOAD_DIR)) {
-    mkdir(UPLOAD_DIR, 0777, true);
+    mkdir(UPLOAD_DIR, 0777, true); // 0777 permisions for read write etc
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
