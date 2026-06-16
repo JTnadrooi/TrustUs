@@ -1,2 +1,2 @@
 ignore/*
-storage/uploads/*.bin
+*/storage/uploads/*.bin

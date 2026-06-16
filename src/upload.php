@@ -1,9 +1,7 @@
 <?php
-
-declare(strict_types=1);
-
 require_once 'functions.php';
 
+// Create upload directory if missing
 if (!file_exists(UPLOAD_DIR)) {
     mkdir(UPLOAD_DIR, 0777, true);
 }
@@ -23,13 +21,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
     $size = $file['size'];
 
     $token = generateToken();
-    $filePath = UPLOAD_DIR . $token . '.bin';
+    $relativePath = 'storage/uploads/' . $token . '.bin';
+    $absolutePath = PROJECT_ROOT . '/' . $relativePath;
 
-    if (!move_uploaded_file($file['tmp_name'], $filePath)) {
+    if (!move_uploaded_file($file['tmp_name'], $absolutePath)) {
         die('Failed to move uploaded file.');
     }
 
-    DB::insertFile($token, $originalName, $mimeType, $size, $filePath);
+    DB::insertFile($token, $originalName, $mimeType, $size, $relativePath);
 
     header('Location: view.php?token=' . urlencode($token));
     exit;

@@ -12,7 +12,15 @@ if (!$file) {
     die('File not found.');
 }
 
-$filePath = $file['file_path'];
+$relativePath = $file['file_path'];
+$absolutePath = PROJECT_ROOT . '/' . $relativePath;
+
+// Check if file actually exists
+if (!file_exists($absolutePath)) {
+    http_response_code(404);
+    die('File not found on server.');
+}
+
 $originalName = $file['original_name'];
 $mimeType = $file['mime_type'];
 $size = $file['size'];
@@ -22,7 +30,7 @@ $isPreviewable = isPreviewable($mimeType);
 $previewHTML = '';
 
 if ($isPreviewable) {
-    // use file_get_contents
+    // use file_get_contents, set $previewHTML
 }
 ?>
 <!DOCTYPE html>
@@ -47,7 +55,7 @@ if ($isPreviewable) {
                 <dt>Uploaded</dt>
                 <dd><?php echo htmlspecialchars($uploadTime); ?></dd>
             </dl>
-            <p><a href="download.php?token=<?php echo urlencode($token); ?>">Download file</a></p>
+            <p><a href="download.php?token=<?php echo urlencode($token); ?>">⬇ Download file</a></p>
 
             <?php if ($isPreviewable && $previewHTML): ?>
                 <section>
@@ -58,11 +66,8 @@ if ($isPreviewable) {
                 <p>Preview not available for this file type.</p>
             <?php endif; ?>
 
-            <p><a href="index.php">Upload another file</a></p>
+            <p><a href="index.php">← Upload another file</a></p>
         </article>
     </main>
 
     <?php require_once 'footer.php'; ?>
-</body>
-
-</html>

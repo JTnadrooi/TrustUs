@@ -1,9 +1,13 @@
 <?php
+
 // site settings
 define('SITE_NAME', 'Trust Us');
 define('MAX_FILE_SIZE', 10 * 1024 * 1024); // 10 MB
-define('STORAGE_DIR', dirname(__DIR__) . '/storage/');
-define('UPLOAD_DIR', STORAGE_DIR . 'uploads/');
+
+// file system paths (absolute)
+define('PROJECT_ROOT', __DIR__);                          // root of your app
+define('STORAGE_DIR', PROJECT_ROOT . '/storage/');        // parent of uploads
+define('UPLOAD_DIR', STORAGE_DIR . 'uploads/');           // absolute path to upload folder
 
 // database settings
 define('DB_HOST', 'localhost');

@@ -13,8 +13,10 @@ if (!$file) {
     die('File not found.');
 }
 
-$filePath = $file['file_path'];
-if (!file_exists($filePath)) {
+$relativePath = $file['file_path'];
+$absolutePath = PROJECT_ROOT . '/' . $relativePath;
+
+if (!file_exists($absolutePath)) {
     http_response_code(404);
     die('File not found on server.');
 }
@@ -34,5 +36,5 @@ header('Pragma: public');
 if (ob_get_level()) {
     ob_end_clean();
 }
-readfile($filePath);
+readfile($absolutePath);
 exit;
