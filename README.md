@@ -30,5 +30,5 @@ This repository contains the complete source code for the TrustUs website, inclu
 
 1. Clone the repository:
     ```bash
-    git clone https://github.com/your-username/trustus.git
+    git clone https://github.com/JTnadrooi/trustus.git
     ```
