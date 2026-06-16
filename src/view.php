@@ -30,7 +30,19 @@ $isPreviewable = isPreviewable($mimeType);
 $previewHTML = '';
 
 if ($isPreviewable) {
-    // use file_get_contents, set $previewHTML
+    if (strpos($mimeType, 'text/plain') === 0) {
+        $content = file_get_contents($absolutePath);
+        $previewHTML = '<div>' . htmlspecialchars($content) . '</div>';
+    } else {
+        $src = 'download.php?token=' . urlencode($token) . '&inline=1';
+        if (strpos($mimeType, 'image/') === 0) {
+            $previewHTML = '<img src="' . $src . '" alt="Image preview">';
+        } elseif (strpos($mimeType, 'video/') === 0) {
+            $previewHTML = '<video controls><source src="' . $src . '" type="' . $mimeType . '"></video>';
+        } elseif (strpos($mimeType, 'audio/') === 0) {
+            $previewHTML = '<audio controls><source src="' . $src . '" type="' . $mimeType . '"></audio>';
+        }
+    }
 }
 ?>
 <!DOCTYPE html>
@@ -55,7 +67,7 @@ if ($isPreviewable) {
                 <dt>Uploaded</dt>
                 <dd><?php echo htmlspecialchars($uploadTime); ?></dd>
             </dl>
-            <p><a href="download.php?token=<?php echo urlencode($token); ?>">⬇ Download file</a></p>
+            <p><a href="download.php?token=<?php echo urlencode($token); ?>">Download file</a></p>
 
             <?php if ($isPreviewable && $previewHTML): ?>
                 <section>
@@ -66,7 +78,7 @@ if ($isPreviewable) {
                 <p>Preview not available for this file type.</p>
             <?php endif; ?>
 
-            <p><a href="index.php">← Upload another file</a></p>
+            <p><a href="index.php">Upload another file</a></p>
         </article>
     </main>
 
