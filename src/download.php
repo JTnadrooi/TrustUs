@@ -1,4 +1,5 @@
 <?php
+
 require_once 'functions.php';
 
 $token = $_GET['token'] ?? '';
@@ -21,6 +22,11 @@ if (!file_exists($absolutePath)) {
     die('File not found on server.');
 }
 
+if (!fileHashIsValid($absolutePath, $file['file_hash'] ?? null)) {
+    http_response_code(409);
+    die('File integrity check failed. The file may have been changed or corrupted.');
+}
+
 $originalName = $file['original_name'];
 $mimeType = $file['mime_type'];
 $size = $file['size'];
@@ -36,5 +42,6 @@ header('Pragma: public');
 if (ob_get_level()) {
     ob_end_clean();
 }
+
 readfile($absolutePath);
 exit;

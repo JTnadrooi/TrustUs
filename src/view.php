@@ -1,4 +1,5 @@
 <?php
+
 require_once 'functions.php';
 
 $token = $_GET['token'] ?? '';
@@ -19,6 +20,11 @@ $absolutePath = PROJECT_ROOT . '/' . $relativePath;
 if (!file_exists($absolutePath)) {
     http_response_code(404);
     die('File not found on server.');
+}
+
+if (!fileHashIsValid($absolutePath, $file['file_hash'] ?? null)) {
+    http_response_code(409);
+    die('File integrity check failed. The file may have been changed or corrupted.');
 }
 
 $originalName = $file['original_name'];
