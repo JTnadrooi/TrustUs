@@ -2,6 +2,8 @@
 
 require_once 'functions.php';
 
+doLoginCheck();
+
 ?>
 
 <?php require_once 'header.php'; ?>
