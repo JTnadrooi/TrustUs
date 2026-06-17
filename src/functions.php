@@ -214,3 +214,11 @@ function fileHashIsValid(string $filePath, ?string $expectedHash): bool
 
     return hash_equals(strtolower($expectedHash), strtolower(fileHash($filePath)));
 }
+
+function checkIfHttps()
+{
+    // check if HTTPS
+    if (empty($_SERVER['HTTPS']) || $_SERVER['HTTPS'] === 'off') {
+        die('Secure HTTPS connection required.');
+    }
+}

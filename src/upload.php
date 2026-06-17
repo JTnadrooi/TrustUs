@@ -1,10 +1,7 @@
 <?php
-// check if HTTPS
-if (empty($_SERVER['HTTPS']) || $_SERVER['HTTPS'] === 'off') {
-    die('Secure HTTPS connection required.');
-}
 require_once 'functions.php';
 
+checkIfHttps();
 
 // create upload directory if missing
 if (!file_exists(UPLOAD_DIR)) {
