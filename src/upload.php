@@ -1,4 +1,8 @@
 <?php
+// Controleer of de verbinding HTTPS gebruikt
+if (empty($_SERVER['HTTPS']) || $_SERVER['HTTPS'] === 'off') {
+    die('Secure HTTPS connection required.');
+}
 require_once 'functions.php';
 
 
