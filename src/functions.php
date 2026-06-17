@@ -22,11 +22,11 @@ class DB
         return self::$conn;
     }
 
-    public static function insertFile(string $token, string $originalName, string $mimeType, int $size, string $filePath): int
+    public static function insertFile(string $token, string $originalName, string $mimeType, int $size, string $filePath, string $fileHash): int
     {
         $conn = self::getDB();
-        $stmt = $conn->prepare("INSERT INTO files (token, original_name, mime_type, size, file_path) VALUES (?, ?, ?, ?, ?)");
-        $stmt->bind_param('sssis', $token, $originalName, $mimeType, $size, $filePath);
+        $stmt = $conn->prepare("INSERT INTO files (token, original_name, mime_type, size, file_path, file_hash) VALUES (?, ?, ?, ?, ?, ?)");
+        $stmt->bind_param('sssiss', $token, $originalName, $mimeType, $size, $filePath, $fileHash);
         $stmt->execute();
         $id = $stmt->insert_id;
         $stmt->close();
@@ -50,7 +50,7 @@ class DB
 
 function generateToken(int $length = 32): string
 {
-    return bin2hex(random_bytes($length / 2));
+    return bin2hex(random_bytes(intdiv($length, 2)));
 }
 
 function getMimeType(string $filePath): string
@@ -58,7 +58,7 @@ function getMimeType(string $filePath): string
     $finfo = finfo_open(FILEINFO_MIME_TYPE);
     $mime = finfo_file($finfo, $filePath);
     finfo_close($finfo);
-    return $mime;
+    return $mime ?: 'application/octet-stream';
 }
 
 function formatSize(int $bytes): string
@@ -81,4 +81,24 @@ function isPreviewable(string $mimeType): bool
         }
     }
     return false;
+}
+
+function fileHash(string $filePath): string
+{
+    $hash = hash_file('sha256', $filePath);
+
+    if ($hash === false) {
+        throw new RuntimeException('Could not calculate file hash.');
+    }
+
+    return $hash;
+}
+
+function fileHashIsValid(string $filePath, ?string $expectedHash): bool
+{
+    if (!$expectedHash || strlen($expectedHash) !== 64 || !is_file($filePath)) {
+        return false;
+    }
+
+    return hash_equals(strtolower($expectedHash), strtolower(fileHash($filePath)));
 }

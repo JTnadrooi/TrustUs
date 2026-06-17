@@ -1,4 +1,5 @@
 <?php
+
 require_once 'functions.php';
 
 $token = $_GET['token'] ?? '';
@@ -19,6 +20,11 @@ $absolutePath = PROJECT_ROOT . '/' . $relativePath;
 if (!file_exists($absolutePath)) {
     http_response_code(404);
     die('File not found on server.');
+}
+
+if (!fileHashIsValid($absolutePath, $file['file_hash'] ?? null)) {
+    http_response_code(409);
+    die('File integrity check failed. The file may have been changed or corrupted.');
 }
 
 $originalName = $file['original_name'];
@@ -45,6 +51,7 @@ if ($isPreviewable) {
     }
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -67,6 +74,7 @@ if ($isPreviewable) {
                 <dt>Uploaded</dt>
                 <dd><?php echo htmlspecialchars($uploadTime); ?></dd>
             </dl>
+
             <p><a href="download.php?token=<?php echo urlencode($token); ?>">Download file</a></p>
 
             <?php if ($isPreviewable && $previewHTML): ?>
@@ -83,3 +91,6 @@ if ($isPreviewable) {
     </main>
 
     <?php require_once 'footer.php'; ?>
+</body>
+
+</html>
