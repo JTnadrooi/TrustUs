@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 require_once 'config.php';
 
+session_start();
+
 class User
 {
     public int $id;
