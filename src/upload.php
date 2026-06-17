@@ -1,5 +1,5 @@
 <?php
-// Controleer of de verbinding HTTPS gebruikt
+// check if HTTPS
 if (empty($_SERVER['HTTPS']) || $_SERVER['HTTPS'] === 'off') {
     die('Secure HTTPS connection required.');
 }
