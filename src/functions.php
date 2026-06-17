@@ -83,6 +83,9 @@ function isPreviewable(string $mimeType): bool
     return false;
 }
 
+// SHA-256 is used for file integrity because it creates a fixed 64-character hash
+// and is strong enough to detect accidental or manual file changes.
+// This is not used for password hashing, only for checking whether a file changed.
 function fileHash(string $filePath): string
 {
     $hash = hash_file('sha256', $filePath);
