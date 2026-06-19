@@ -19,6 +19,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
         die('File too large. Maximum size is ' . formatSize(MAX_FILE_SIZE));
     }
 
+    // get target user from form
+    $targetUserId = (int)($_POST['target_user'] ?? 0);
+    if ($targetUserId <= 0) {
+        die('Please select a recipient.');
+    }
+    // verify that target user exists
+    $targetUser = DB::getUserById($targetUserId);
+    if (!$targetUser) {
+        die('Selected recipient does not exist.');
+    }
+
     $originalName = $file['name'];
     $mimeType = $file['type'] ?: getMimeType($file['tmp_name']);
     $size = $file['size'];
@@ -33,7 +44,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
 
     $fileHash = fileHash($absolutePath);
 
-    DB::insertFile($token, $originalName, $mimeType, $size, $relativePath, $fileHash);
+    // insert with sender (current user) and target
+    DB::insertFile(
+        $token,
+        $originalName,
+        $mimeType,
+        $size,
+        $relativePath,
+        $fileHash,
+        currentUserId(),   // sender
+        $targetUserId      // recipient
+    );
 
     header('Location: view.php?token=' . urlencode($token));
     exit;

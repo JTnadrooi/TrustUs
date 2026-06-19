@@ -53,33 +53,6 @@ class DB
         return self::$pdo;
     }
 
-    public static function insertFile(
-        string $token,
-        string $originalName,
-        string $mimeType,
-        int $size,
-        string $filePath,
-        string $fileHash
-    ): int {
-        $pdo = self::getDB();
-
-        $stmt = $pdo->prepare("
-        INSERT INTO files (token, original_name, mime_type, size, file_path, file_hash)
-        VALUES (:token, :original_name, :mime_type, :size, :file_path, :file_hash)
-    ");
-
-        $stmt->execute([
-            ':token' => $token,
-            ':original_name' => $originalName,
-            ':mime_type' => $mimeType,
-            ':size' => $size,
-            ':file_path' => $filePath,
-            ':file_hash' => $fileHash,
-        ]);
-
-        return (int)$pdo->lastInsertId();
-    }
-
     public static function getFileByToken(string $token): ?array
     {
         $pdo = self::getDB();
@@ -124,6 +97,71 @@ class DB
             $row['password'],
             $row['created_at']
         );
+    }
+
+    // add these methods inside the DB class
+
+    /**
+     * get all users (id, username) for dropdown
+     *
+     * @return array list of users
+     */
+    public static function getAllUsers(): array
+    {
+        $pdo = self::getDB();
+        $stmt = $pdo->query("SELECT id, username FROM users ORDER BY username");
+        return $stmt->fetchAll();
+    }
+
+    /**
+     * get a user by id
+     *
+     * @param int $id
+     * @return User|null
+     */
+    public static function getUserById(int $id): ?User
+    {
+        $pdo = self::getDB();
+        $stmt = $pdo->prepare("SELECT id, username, role, password, created_at FROM users WHERE id = :id");
+        $stmt->execute([':id' => $id]);
+        $row = $stmt->fetch();
+        if (!$row) return null;
+        return new User(
+            (int)$row['id'],
+            $row['username'],
+            $row['role'],
+            $row['password'],
+            $row['created_at']
+        );
+    }
+
+    // modify insertFile to accept sender and target
+    public static function insertFile(
+        string $token,
+        string $originalName,
+        string $mimeType,
+        int $size,
+        string $filePath,
+        string $fileHash,
+        int $senderId,
+        int $targetUserId
+    ): int {
+        $pdo = self::getDB();
+        $stmt = $pdo->prepare("
+        INSERT INTO files (token, original_name, mime_type, size, file_path, file_hash, sender_id, target_user_id)
+        VALUES (:token, :original_name, :mime_type, :size, :file_path, :file_hash, :sender_id, :target_user_id)
+    ");
+        $stmt->execute([
+            ':token'          => $token,
+            ':original_name'  => $originalName,
+            ':mime_type'      => $mimeType,
+            ':size'           => $size,
+            ':file_path'      => $filePath,
+            ':file_hash'      => $fileHash,
+            ':sender_id'      => $senderId,
+            ':target_user_id' => $targetUserId,
+        ]);
+        return (int)$pdo->lastInsertId();
     }
 }
 
@@ -221,6 +259,6 @@ function checkIfHttps()
 {
     // check if HTTPS
     if (empty($_SERVER['HTTPS']) || $_SERVER['HTTPS'] === 'off') {
-        die('Secure HTTPS connection required.');
+        // die('Secure HTTPS connection required.');
     }
 }

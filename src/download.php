@@ -1,5 +1,4 @@
 <?php
-
 require_once 'functions.php';
 
 $token = $_GET['token'] ?? '';
@@ -12,6 +11,13 @@ $file = DB::getFileByToken($token);
 if (!$file) {
     http_response_code(404);
     die('File not found.');
+}
+
+// allow sender and target
+$userId = currentUserId();
+if ($userId !== (int)$file['sender_id'] && $userId !== (int)$file['target_user_id']) {
+    http_response_code(403);
+    die('You are not allowed to download this file.');
 }
 
 $relativePath = $file['file_path'];
