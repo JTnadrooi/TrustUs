@@ -1,0 +1,1 @@
+[2026-06-19 14:04:27] [LOGIN_SUCCESS] [user:3] [ip:::1] User logged in: beer

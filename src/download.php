@@ -24,6 +24,10 @@ $relativePath = $file['file_path'];
 $absolutePath = PROJECT_ROOT . '/' . $relativePath;
 
 if (!file_exists($absolutePath)) {
+    writeLog(
+    'DOWNLOAD',
+    "File downloaded: " . $file['original_name'] . " (token: $token)"
+);
     http_response_code(404);
     die('File not found on server.');
 }

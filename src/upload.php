@@ -55,6 +55,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
         currentUserId(),   // sender
         $targetUserId      // recipient
     );
+    // update for the log
+    writeLog(
+'UPLOAD',
+"File uploaded: $originalName (token: $token) sent to user $targetUserId"
+);
+
 
     header('Location: view.php?token=' . urlencode($token));
     exit;

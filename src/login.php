@@ -17,12 +17,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // verify password and set session variables if valid
         if ($user && password_verify($password, $user->password)) {
+            
+            
             $_SESSION['user_id'] = $user->id;
             $_SESSION['username'] = $user->username;
+            //update log
+            writeLog(
+                'LOGIN_SUCCESS',
+                "User logged in: $username");
+
             // redirect to main page after successful login
             header('Location: index.php');
             exit;
         } else {
+            // log update
+            writeLog(
+            'LOGIN_FAIL',
+            "Failed login attempt for username: $username");
+
             $error = 'Invalid username or password.';
         }
     }

@@ -262,3 +262,22 @@ function checkIfHttps()
         // die('Secure HTTPS connection required.');
     }
 }
+// template for updating the log
+function writeLog(string $type, string $message): void
+{
+$logDir = PROJECT_ROOT . '/storage/logs';
+
+if (!file_exists($logDir)) {
+    mkdir($logDir, 0755, true);
+}
+
+$file = $logDir . '/app.log.txt';
+
+$time = date('Y-m-d H:i:s');
+$userId = currentUserId() ?? 0;
+$ip = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
+
+$line = "[$time] [$type] [user:$userId] [ip:$ip] $message" . PHP_EOL;
+
+file_put_contents($file, $line, FILE_APPEND);
+}
