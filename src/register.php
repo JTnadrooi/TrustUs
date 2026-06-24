@@ -28,7 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // insert new user with default viewer role
             $stmt = DB::getDB()->prepare("INSERT INTO users (username, password, role, created_at) VALUES (?, ?, 'viewer', CURDATE())");
             if ($stmt->execute([$username, $hashed])) {
-                $success = 'Registration successful. <a href="login.php">Login here</a>';
+                $success = 'Registration successful! You can now <a href="login.php">login here</a>.';
             } else {
                 $error = 'Registration failed. Try again.';
             }
@@ -38,21 +38,67 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 include 'header.php';
 ?>
-<h2>Register</h2>
-<?php if ($error): ?>
-    <p style="color:red;"><?php echo htmlspecialchars($error); ?></p>
-<?php endif; ?>
-<?php if ($success): ?>
-    <p style="color:green;"><?php echo $success; ?></p>
-<?php else: ?>
-    <form method="post">
-        <label>Username: <input type="text" name="username" required></label><br><br>
-        <label>Password: <input type="password" name="password" required></label><br><br>
-        <label>Confirm Password: <input type="password" name="confirm_password" required></label><br><br>
-        <button type="submit">Register</button>
-        <button type="button" onclick="location.href='login.php'">
-            Back to login
-        </button>
-    </form>
-<?php endif; ?>
+
+<div class="auth-page">
+    <div class="auth-container">
+        <div class="auth-header">
+            <h2>Create Account</h2>
+            <p>Join us to start sharing files</p>
+        </div>
+
+        <?php if ($error): ?>
+            <div class="auth-error">
+                <span class="error-icon">⚠️</span>
+                <?php echo htmlspecialchars($error); ?>
+            </div>
+        <?php endif; ?>
+
+        <?php if ($success): ?>
+            <div class="auth-success">
+                <span class="success-icon">✅</span>
+                <?php echo $success; ?>
+            </div>
+        <?php else: ?>
+            <form method="post" class="auth-form">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <div class="input-wrapper">
+                        <span class="input-icon">👤</span>
+                        <input type="text" id="username" name="username" placeholder="Choose a username" required autofocus>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <div class="input-wrapper">
+                        <span class="input-icon">🔒</span>
+                        <input type="password" id="password" name="password" placeholder="Create a password" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="confirm_password">Confirm Password</label>
+                    <div class="input-wrapper">
+                        <span class="input-icon">✓</span>
+                        <input type="password" id="confirm_password" name="confirm_password" placeholder="Confirm your password" required>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">
+                        Create Account
+                    </button>
+                    <button type="button" class="btn btn-secondary" onclick="location.href='login.php'">
+                        Back to Login
+                    </button>
+                </div>
+            </form>
+
+            <div class="auth-footer">
+                <p>Already have an account? <a href="login.php">Sign in</a></p>
+            </div>
+        <?php endif; ?>
+    </div>
+</div>
+
 <?php include 'footer.php'; ?>

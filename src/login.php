@@ -30,16 +30,52 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 include 'header.php';
 ?>
-<h2>Login</h2>
-<?php if ($error): ?>
-    <p style="color:red;"><?php echo htmlspecialchars($error); ?></p>
-<?php endif; ?>
-<form method="post">
-    <label>Username: <input type="text" name="username" required></label><br><br>
-    <label>Password: <input type="password" name="password" required></label><br><br>
-    <button type="submit">Login</button>
-    <button type="button" onclick="location.href='register.php'">
-        Register
-    </button>
-</form>
+
+<div class="auth-page">
+    <div class="auth-container">
+        <div class="auth-header">
+            <h2>Welcome Back</h2>
+            <p>Sign in to access your files</p>
+        </div>
+
+        <?php if ($error): ?>
+            <div class="auth-error">
+                <span class="error-icon">⚠️</span>
+                <?php echo htmlspecialchars($error); ?>
+            </div>
+        <?php endif; ?>
+
+        <form method="post" class="auth-form">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <div class="input-wrapper">
+                    <span class="input-icon">👤</span>
+                    <input type="text" id="username" name="username" placeholder="Enter your username" required autofocus>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <div class="input-wrapper">
+                    <span class="input-icon">🔒</span>
+                    <input type="password" id="password" name="password" placeholder="Enter your password" required>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">
+                    Sign In
+                </button>
+                <button type="button" class="btn btn-secondary" onclick="location.href='register.php'">
+                    Create Account
+                </button>
+            </div>
+        </form>
+
+        <div class="auth-footer">
+            <p>New here? <a href="register.php">Create an account</a></p>
+        </div>
+    </div>
+</div>
+
 <?php include 'footer.php'; ?>
