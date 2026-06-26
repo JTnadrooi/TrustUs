@@ -28,7 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // insert new user with default viewer role
             $stmt = DB::getDB()->prepare("INSERT INTO users (username, password, role, created_at) VALUES (?, ?, 'viewer', CURDATE())");
             if ($stmt->execute([$username, $hashed])) {
-                $success = 'Registration successful! You can now <a href="login.php">login here</a>.';
+                $success = 'Registration successful!<br>You can now <a href="login.php">login here</a>.';
             } else {
                 $error = 'Registration failed. Try again.';
             }
@@ -56,7 +56,9 @@ include 'header.php';
         <?php if ($success): ?>
             <div class="auth-success">
                 <span class="success-icon">✅</span>
-                <?php echo $success; ?>
+                <span class="message-text">
+                    <?php echo $success; ?>
+                </span>
             </div>
         <?php else: ?>
             <form method="post" class="auth-form">
