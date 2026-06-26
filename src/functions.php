@@ -188,15 +188,32 @@ function getMimeType(string $filePath): string
     return $mime ?: 'application/octet-stream';
 }
 
-function formatSize(int $bytes): string
+function formatSize(int $bytes, int $precision = 2): string
 {
-    if ($bytes >= 1024 * 1024) {
-        return number_format($bytes / (1024 * 1024), 2) . ' MB';
-    } elseif ($bytes >= 1024) {
-        return number_format($bytes / 1024, 2) . ' KB';
-    } else {
-        return $bytes . ' bytes';
+    if ($bytes < 0) {
+        return '0 bytes';
     }
+
+    $units = ['bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+    $factor = 1024;
+    $i = 0;
+
+    while ($bytes >= $factor && $i < count($units) - 1) {
+        $bytes /= $factor;
+        $i++;
+    }
+
+    // for bytes, never show decimals; for larger units, format with given precision
+    $decimals = ($i === 0) ? 0 : $precision;
+    $formatted = number_format($bytes, $decimals);
+
+    // remove unnecessary trailing zeros and the decimal point if all zeros
+    if (strpos($formatted, '.') !== false) {
+        $formatted = rtrim($formatted, '0');
+        $formatted = rtrim($formatted, '.');
+    }
+
+    return $formatted . ' ' . $units[$i];
 }
 
 function isPreviewable(string $mimeType): bool
