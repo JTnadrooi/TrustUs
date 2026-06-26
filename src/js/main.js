@@ -23,7 +23,7 @@ function changeTheme(theme) {
 document.addEventListener('DOMContentLoaded', function () {
     // check for theme cookie
     const cookies = document.cookie.split(';');
-    let theme = 'pink'; // default
+    let theme = 'green'; // default
 
     for (let cookie of cookies) {
         const [name, value] = cookie.trim().split('=');
