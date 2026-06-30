@@ -10,7 +10,7 @@ $currentId = currentUserId();
 <?php require_once 'header.php'; ?>
 <section>
     <p style="text-align: center; font-size: 1.1rem;">
-        Upload a file <span style="color: var(--pink-500);">✨</span>
+        Upload a file <span style="color: var(--pink-500);"></span>
         <span style="display: block; font-size: 0.85rem; color: var(--text-muted); margin-top: 0.25rem;">
             max <?php echo formatSize(MAX_FILE_SIZE); ?>
         </span>
